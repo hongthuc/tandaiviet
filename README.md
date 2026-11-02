@@ -77,6 +77,7 @@
       justify-content: space-between;
       border-bottom: 2px solid #e2e8f0;
       margin-bottom: 20px;
+      margin-top: 25px;
     }
     .fs-section-title-main {
       display: inline-flex;
@@ -156,21 +157,21 @@
       transform: scale(1.05);
     }
 
-    /* Kích thước chuyên nghiệp cho 2 Banner tự trượt */
+    /* Slider banner chuẩn không bị đè khuất */
     .fs-banner-slider {
       position: relative;
       width: 100%;
-      aspect-ratio: 16 / 7;
-      max-height: 500px;
-      min-height: 220px;
       overflow: hidden;
-      background-color: #072b52;
       border-radius: 10px;
+      background-color: #072b52;
     }
-    @media (min-width: 1024px) {
-      .fs-banner-slider {
-        aspect-ratio: 21 / 8;
-      }
+    .banner-slide {
+      display: none;
+      width: 100%;
+      position: relative;
+    }
+    .banner-slide.active {
+      display: block;
     }
 
     /* Hiệu ứng rung nhẹ cho nút liên hệ nổi */
@@ -182,18 +183,9 @@
     .pulse-btn {
       animation: pulseRing 2s infinite;
     }
-
-    /* Ẩn thanh cuộn phụ nếu có */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
   </style>
 
-  <!-- Script tự động xử lý link ảnh Google Drive đa luồng (Đảm bảo 100% chỉ dùng ảnh Drive thực tế của Tân Đại Việt) -->
+  <!-- Script xử lý ảnh Google Drive đa luồng -->
   <script>
     function retryDriveImage(imgEl, fileId) {
       const step = parseInt(imgEl.getAttribute('data-retry') || '0', 10);
@@ -215,7 +207,7 @@
 <body class="w-full overflow-x-hidden">
 
   <!-- =====================================================================
-       1. TOPBAR FLATSOME (Đơn giản, chỉ hiển thị thông tin công ty, không có thanh UX Builder)
+       1. TOPBAR FLATSOME
        ===================================================================== -->
   <div class="bg-primaryDark text-white text-xs py-2 border-b border-blue-900">
     <div class="fs-container flex flex-wrap items-center justify-between gap-2">
@@ -232,10 +224,9 @@
   </div>
 
   <!-- =====================================================================
-       2. HEADER FLATSOME (Không để nút gọi ngay trên Header để tránh tràn viền)
+       2. HEADER FLATSOME
        ===================================================================== -->
   <header class="bg-white sticky top-0 z-40 shadow-sm border-b border-gray-200">
-    <!-- Header Main -->
     <div class="fs-container py-2.5 md:py-3.5">
       <div class="flex items-center justify-between gap-3">
         <!-- Nút mở Menu trên Điện thoại -->
@@ -261,7 +252,7 @@
           </div>
         </a>
 
-        <!-- Ô tìm kiếm chuẩn Flatsome (Hiển thị trên máy tính) -->
+        <!-- Ô tìm kiếm (Desktop) -->
         <div class="hidden md:flex flex-1 max-w-md mx-4">
           <form onsubmit="handleSearch(event)" class="w-full flex">
             <input
@@ -276,7 +267,7 @@
           </form>
         </div>
 
-        <!-- Thông tin địa chỉ văn phòng & xưởng trên Desktop (Không để nút Gọi ngay) -->
+        <!-- Thông tin văn phòng & xưởng (Desktop) -->
         <div class="hidden xl:flex items-center gap-5 text-xs text-gray-600 shrink-0">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-blue-50 text-primary flex items-center justify-center">
@@ -299,13 +290,13 @@
         </div>
       </div>
 
-      <!-- Thanh tìm kiếm gọn trên điện thoại -->
+      <!-- Tìm kiếm trên Mobile -->
       <div class="mt-2.5 md:hidden">
         <form onsubmit="handleMobileSearch(event)" class="w-full flex">
           <input
             id="mobileSearchInput"
             type="text"
-            placeholder="Tìm dịch vụ: Bảng hiệu, Chữ nổi, CNC, In ấn..."
+            placeholder="Tìm dịch vụ: Bảng hiệu, Chữ nổi, CNC..."
             class="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-l-md focus:outline-none focus:border-primary"
           >
           <button type="submit" class="bg-primary text-white px-3.5 py-1.5 rounded-r-md text-xs">
@@ -315,17 +306,15 @@
       </div>
     </div>
 
-    <!-- Header Bottom Navigation (Chuẩn Flatsome Mega Menu + Danh mục mẫu Phucloiviet.vn) -->
+    <!-- Navigation Menu (Desktop) -->
     <nav class="hidden lg:block bg-primary text-white">
       <div class="fs-container flex items-center justify-between">
-        <!-- Nút Danh Mục Sản Phẩm sổ xuống -->
         <div class="relative group">
           <div class="bg-accent px-5 py-3 font-bold text-sm uppercase flex items-center gap-2.5 cursor-pointer">
             <i class="fa-solid fa-bars-staggered"></i>
             <span>DANH MỤC SẢN PHẨM</span>
             <i class="fa-solid fa-chevron-down text-xs ml-1"></i>
           </div>
-          <!-- Dropdown Danh mục chuẩn web mẫu phucloiviet.vn -->
           <div class="absolute left-0 top-full w-72 bg-white text-gray-800 shadow-xl border border-gray-200 rounded-b-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 divide-y divide-gray-100">
             <a href="#cat-thi-cong-quang-cao" class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 hover:text-primary text-sm font-medium transition">
               <span><i class="fa-solid fa-sign-hanging w-6 text-primary"></i>Thi Công Quảng Cáo</span>
@@ -336,7 +325,7 @@
               <i class="fa-solid fa-angle-right text-xs text-gray-400"></i>
             </a>
             <a href="#cat-cnc-laser" class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 hover:text-primary text-sm font-medium transition">
-              <span><i class="fa-solid fa-wand-magic-sparkles w-6 text-primary"></i>CNC – Cắt Laser – Hàn Uốn Inox</span>
+              <span><i class="fa-solid fa-wand-magic-sparkles w-6 text-primary"></i>CNC – Cắt Laser – Uốn Inox</span>
               <i class="fa-solid fa-angle-right text-xs text-gray-400"></i>
             </a>
             <a href="#cat-in-phun" class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 hover:text-primary text-sm font-medium transition">
@@ -354,7 +343,6 @@
           </div>
         </div>
 
-        <!-- Menu Ngang Chính -->
         <ul class="flex items-center text-xs xl:text-sm font-bold uppercase tracking-wide">
           <li><a href="#trang-chu" class="block px-3.5 py-3 hover:bg-primaryDark transition">Trang Chủ</a></li>
           <li><a href="#danh-muc-trang-chu" class="block px-3.5 py-3 hover:bg-primaryDark transition">Danh Mục</a></li>
@@ -369,7 +357,7 @@
       </div>
     </nav>
 
-    <!-- Menu Drawer trên Điện thoại -->
+    <!-- Menu Drawer (Mobile) -->
     <div id="mobileMenuDrawer" class="fixed inset-0 z-50 hidden">
       <div onclick="toggleMobileMenu()" class="absolute inset-0 bg-black/60"></div>
       <div class="relative w-72 max-w-[82vw] h-full bg-white shadow-2xl flex flex-col justify-between overflow-y-auto">
@@ -405,76 +393,79 @@
   </header>
 
   <!-- =====================================================================
-       3. [UX BUILDER SECTION] 2 ẢNH BANNER TỰ TRƯỢT KÍCH THƯỚC CHUYÊN NGHIỆP
-       (Sử dụng trực tiếp ảnh công trình thực tế từ Google Drive, không để nhãn dán thừa)
+       3. 2 ẢNH BANNER TỰ TRƯỢT (Đã sửa lỗi hiển thị tầng, không bị đè khuất)
        ===================================================================== -->
-  <section id="trang-chu" class="py-3 md:py-5">
+  <section id="trang-chu" class="py-3 md:py-4">
     <div class="fs-container">
       <div class="fs-banner-slider shadow-md group" id="mainBannerSlider">
 
         <!-- SLIDE 1 -->
-        <div class="banner-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-10">
-          <img
-            src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w1600"
-            onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')"
-            alt="Banner 1 - Công ty TNHH Thiết kế Thi công Quảng cáo Tân Đại Việt"
-            class="w-full h-full object-cover"
-          >
-          <div class="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-900/60 to-transparent flex items-center">
-            <div class="px-5 sm:px-10 md:px-14 max-w-2xl text-white space-y-2 sm:space-y-3.5">
-              <p class="text-yellow-400 font-bold text-xs sm:text-sm uppercase tracking-wider">
-                CÔNG TY TNHH THIẾT KẾ THI CÔNG QUẢNG CÁO TÂN ĐẠI VIỆT
-              </p>
-              <h1 class="text-lg sm:text-2xl md:text-4xl font-black leading-tight uppercase">
-                THIẾT KẾ & THI CÔNG BẢNG HIỆU QUẢNG CÁO TRỌN GÓI ĐÀ NẴNG
-              </h1>
-              <p class="text-xs sm:text-sm md:text-base text-gray-200 line-clamp-2">
-                Chuyên mặt dựng Alu, chữ nổi Inox - Mica đèn LED, Pano, Hộp đèn, Showroom nội ngoại thất. Sản xuất trực tiếp tại xưởng K88/9B Lê Đình Lý.
-              </p>
-              <div class="pt-1 flex flex-wrap items-center gap-2.5">
-                <a href="#form-bao-gia" class="bg-accent hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-md transition">
-                  NHẬN BÁO GIÁ NGAY
-                </a>
-                <a href="#du-an-thuc-te" class="bg-white/15 hover:bg-white/25 backdrop-blur text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-md border border-white/30 transition">
-                  XEM CÔNG TRÌNH THỰC TẾ
-                </a>
+        <div class="banner-slide active">
+          <div class="relative w-full aspect-[16/8] sm:aspect-[21/8] max-h-[460px] min-h-[220px]">
+            <img
+              src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w1600"
+              onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')"
+              alt="Banner 1 - Công ty TNHH Thiết kế Thi công Quảng cáo Tân Đại Việt"
+              class="w-full h-full object-cover"
+            >
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-900/60 to-transparent flex items-center">
+              <div class="px-5 sm:px-10 md:px-14 max-w-2xl text-white space-y-2 sm:space-y-3">
+                <p class="text-yellow-400 font-bold text-xs sm:text-sm uppercase tracking-wider">
+                  CÔNG TY TNHH THIẾT KẾ THI CÔNG QUẢNG CÁO TÂN ĐẠI VIỆT
+                </p>
+                <h1 class="text-base sm:text-2xl md:text-4xl font-black leading-tight uppercase">
+                  THIẾT KẾ & THI CÔNG BẢNG HIỆU QUẢNG CÁO TRỌN GÓI ĐÀ NẴNG
+                </h1>
+                <p class="text-xs sm:text-sm text-gray-200 line-clamp-2">
+                  Chuyên mặt dựng Alu, chữ nổi Inox - Mica đèn LED, Pano, Hộp đèn, Showroom nội ngoại thất. Sản xuất trực tiếp tại xưởng K88/9B Lê Đình Lý.
+                </p>
+                <div class="pt-1 flex flex-wrap items-center gap-2">
+                  <a href="#form-bao-gia" class="bg-accent hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded transition">
+                    NHẬN BÁO GIÁ NGAY
+                  </a>
+                  <a href="#du-an-thuc-te" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded border border-white/30 transition">
+                    XEM CÔNG TRÌNH THỰC TẾ
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- SLIDE 2 -->
-        <div class="banner-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
-          <img
-            src="https://lh3.googleusercontent.com/d/1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg=w1600"
-            onerror="retryDriveImage(this, '1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg')"
-            alt="Banner 2 - Xưởng Gia Công Chữ Nổi CNC Laser In Ấn Tân Đại Việt"
-            class="w-full h-full object-cover"
-          >
-          <div class="absolute inset-0 bg-gradient-to-r from-primaryDark/90 via-primary/65 to-transparent flex items-center">
-            <div class="px-5 sm:px-10 md:px-14 max-w-2xl text-white space-y-2 sm:space-y-3.5">
-              <p class="text-yellow-300 font-bold text-xs sm:text-sm uppercase tracking-wider">
-                XƯỞNG SẢN XUẤT TRỰC TIẾP - KHÔNG QUA TRUNG GIAN
-              </p>
-              <h2 class="text-lg sm:text-2xl md:text-4xl font-black leading-tight uppercase">
-                GIA CÔNG CHỮ NỔI INOX - CẮT CNC LASER - IN PHUN KHỔ LỚN
-              </h2>
-              <p class="text-xs sm:text-sm md:text-base text-gray-100 line-clamp-2">
-                Văn phòng: 149 Hoàng Diệu, Đà Nẵng | Xưởng SX: K88/9B Lê Đình Lý, Đà Nẵng | Hotline tư vấn 24/7: 0987.919.069 – 0369.561.458
-              </p>
-              <div class="pt-1 flex flex-wrap items-center gap-2.5">
-                <a href="tel:0987919069" class="bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-md transition">
-                  HOTLINE: 0987.919.069
-                </a>
-                <a href="#danh-muc-trang-chu" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-md border border-white/30 transition">
-                  KHÁM PHÁ DỊCH VỤ
-                </a>
+        <div class="banner-slide">
+          <div class="relative w-full aspect-[16/8] sm:aspect-[21/8] max-h-[460px] min-h-[220px]">
+            <img
+              src="https://lh3.googleusercontent.com/d/1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg=w1600"
+              onerror="retryDriveImage(this, '1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg')"
+              alt="Banner 2 - Xưởng Gia Công Chữ Nổi CNC Laser In Ấn Tân Đại Việt"
+              class="w-full h-full object-cover"
+            >
+            <div class="absolute inset-0 bg-gradient-to-r from-primaryDark/90 via-primary/65 to-transparent flex items-center">
+              <div class="px-5 sm:px-10 md:px-14 max-w-2xl text-white space-y-2 sm:space-y-3">
+                <p class="text-yellow-300 font-bold text-xs sm:text-sm uppercase tracking-wider">
+                  XƯỞNG SẢN XUẤT TRỰC TIẾP - KHÔNG QUA TRUNG GIAN
+                </p>
+                <h2 class="text-base sm:text-2xl md:text-4xl font-black leading-tight uppercase">
+                  GIA CÔNG CHỮ NỔI INOX - CẮT CNC LASER - IN PHUN KHỔ LỚN
+                </h2>
+                <p class="text-xs sm:text-sm text-gray-100 line-clamp-2">
+                  Văn phòng: 149 Hoàng Diệu, Đà Nẵng | Xưởng SX: K88/9B Lê Đình Lý, Đà Nẵng | Hotline: 0987.919.069 – 0369.561.458
+                </p>
+                <div class="pt-1 flex flex-wrap items-center gap-2">
+                  <a href="tel:0987919069" class="bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold text-xs sm:text-sm px-4 py-2 rounded transition">
+                    HOTLINE: 0987.919.069
+                  </a>
+                  <a href="#danh-muc-trang-chu" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded border border-white/30 transition">
+                    KHÁM PHÁ DỊCH VỤ
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Nút điều hướng Trái / Phải của Slider -->
+        <!-- Nút điều hướng Trái / Phải -->
         <button onclick="changeSlide(-1)" aria-label="Slide trước" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition">
           <i class="fa-solid fa-chevron-left text-sm"></i>
         </button>
@@ -482,7 +473,7 @@
           <i class="fa-solid fa-chevron-right text-sm"></i>
         </button>
 
-        <!-- Chấm tròn chỉ báo Slide -->
+        <!-- Chấm tròn chỉ báo -->
         <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
           <button onclick="goToSlide(0)" class="banner-dot w-6 h-2 rounded-full bg-yellow-400 transition-all"></button>
           <button onclick="goToSlide(1)" class="banner-dot w-2.5 h-2 rounded-full bg-white/60 transition-all"></button>
@@ -493,10 +484,9 @@
   </section>
 
   <!-- =====================================================================
-       4. [UX BUILDER SECTION] DANH MỤC SẢN PHẨM TRANG CHỦ
-       (Thiết kế đẹp, đồng bộ trên Máy tính 6 cột & Điện thoại 2-3 cột, lấy từ mẫu phucloiviet.vn)
+       4. DANH MỤC SẢN PHẨM TRANG CHỦ
        ===================================================================== -->
-  <section id="danh-muc-trang-chu" class="py-5 md:py-7">
+  <section id="danh-muc-trang-chu" class="py-2">
     <div class="fs-container">
       <div class="fs-section-title">
         <h2 class="fs-section-title-main">
@@ -508,82 +498,56 @@
         </span>
       </div>
 
-      <!-- Grid Danh Mục: Điện thoại 2 cột, Tablet 3 cột, Máy tính 6 cột cân đối -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-        <!-- Danh mục 1 -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <a href="#cat-thi-cong-quang-cao" class="group bg-white rounded-lg border border-gray-200 p-2.5 hover:border-primary hover:shadow-md transition flex flex-col items-center text-center">
-          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2.5">
+          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2">
             <img src="https://lh3.googleusercontent.com/d/1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR=w600" onerror="retryDriveImage(this, '1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR')" alt="Thi Công Quảng Cáo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <h3 class="font-bold text-xs sm:text-sm text-gray-800 group-hover:text-primary uppercase leading-snug">
-            Thi Công Quảng Cáo
-          </h3>
-          <span class="text-[11px] text-gray-500 mt-0.5">Bảng hiệu Alu, Mạt dựng</span>
+          <h3 class="font-bold text-xs text-gray-800 group-hover:text-primary uppercase leading-snug">Thi Công Quảng Cáo</h3>
         </a>
 
-        <!-- Danh mục 2 -->
         <a href="#cat-chu-noi" class="group bg-white rounded-lg border border-gray-200 p-2.5 hover:border-primary hover:shadow-md transition flex flex-col items-center text-center">
-          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2.5">
+          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2">
             <img src="https://lh3.googleusercontent.com/d/1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb=w600" onerror="retryDriveImage(this, '1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb')" alt="Chữ Nổi Quảng Cáo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <h3 class="font-bold text-xs sm:text-sm text-gray-800 group-hover:text-primary uppercase leading-snug">
-            Chữ Nổi Quảng Cáo
-          </h3>
-          <span class="text-[11px] text-gray-500 mt-0.5">Inox, Mica, Đèn LED</span>
+          <h3 class="font-bold text-xs text-gray-800 group-hover:text-primary uppercase leading-snug">Chữ Nổi Quảng Cáo</h3>
         </a>
 
-        <!-- Danh mục 3 -->
         <a href="#cat-cnc-laser" class="group bg-white rounded-lg border border-gray-200 p-2.5 hover:border-primary hover:shadow-md transition flex flex-col items-center text-center">
-          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2.5">
-            <img src="https://lh3.googleusercontent.com/d/1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm=w600" onerror="retryDriveImage(this, '1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm')" alt="CNC - Cắt Laser - Uốn Inox" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2">
+            <img src="https://lh3.googleusercontent.com/d/1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm=w600" onerror="retryDriveImage(this, '1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm')" alt="CNC - Laser" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <h3 class="font-bold text-xs sm:text-sm text-gray-800 group-hover:text-primary uppercase leading-snug">
-            CNC – Laser – Uốn Inox
-          </h3>
-          <span class="text-[11px] text-gray-500 mt-0.5">Gia công chính xác cao</span>
+          <h3 class="font-bold text-xs text-gray-800 group-hover:text-primary uppercase leading-snug">CNC – Laser – Uốn Inox</h3>
         </a>
 
-        <!-- Danh mục 4 -->
         <a href="#cat-in-phun" class="group bg-white rounded-lg border border-gray-200 p-2.5 hover:border-primary hover:shadow-md transition flex flex-col items-center text-center">
-          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2.5">
+          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2">
             <img src="https://lh3.googleusercontent.com/d/1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R=w600" onerror="retryDriveImage(this, '1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R')" alt="In Phun Khổ Lớn" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <h3 class="font-bold text-xs sm:text-sm text-gray-800 group-hover:text-primary uppercase leading-snug">
-            In Phun Khổ Lớn
-          </h3>
-          <span class="text-[11px] text-gray-500 mt-0.5">Bạt Hiflex, Decal, PP</span>
+          <h3 class="font-bold text-xs text-gray-800 group-hover:text-primary uppercase leading-snug">In Phun Khổ Lớn</h3>
         </a>
 
-        <!-- Danh mục 5 -->
         <a href="#cat-showroom" class="group bg-white rounded-lg border border-gray-200 p-2.5 hover:border-primary hover:shadow-md transition flex flex-col items-center text-center">
-          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2.5">
-            <img src="https://lh3.googleusercontent.com/d/1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_=w600" onerror="retryDriveImage(this, '1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_')" alt="Showroom Nội Ngoại Thất" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2">
+            <img src="https://lh3.googleusercontent.com/d/1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_=w600" onerror="retryDriveImage(this, '1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_')" alt="Showroom Nội Thất" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <h3 class="font-bold text-xs sm:text-sm text-gray-800 group-hover:text-primary uppercase leading-snug">
-            Showroom Nội Ngoại Thất
-          </h3>
-          <span class="text-[11px] text-gray-500 mt-0.5">Shop, Quầy lễ tân, Kệ</span>
+          <h3 class="font-bold text-xs text-gray-800 group-hover:text-primary uppercase leading-snug">Showroom Nội Thất</h3>
         </a>
 
-        <!-- Danh mục 6 -->
         <a href="#cat-cnc-go" class="group bg-white rounded-lg border border-gray-200 p-2.5 hover:border-primary hover:shadow-md transition flex flex-col items-center text-center">
-          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2.5">
-            <img src="https://lh3.googleusercontent.com/d/1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh=w600" onerror="retryDriveImage(this, '1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh')" alt="Cắt CNC Gỗ Công Nghiệp" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <div class="w-full aspect-[4/3] rounded overflow-hidden bg-gray-100 mb-2">
+            <img src="https://lh3.googleusercontent.com/d/1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh=w600" onerror="retryDriveImage(this, '1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh')" alt="Cắt CNC Gỗ" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
           </div>
-          <h3 class="font-bold text-xs sm:text-sm text-gray-800 group-hover:text-primary uppercase leading-snug">
-            Cắt CNC Gỗ Công Nghiệp
-          </h3>
-          <span class="text-[11px] text-gray-500 mt-0.5">Vách ngăn, MDF, HDF</span>
+          <h3 class="font-bold text-xs text-gray-800 group-hover:text-primary uppercase leading-snug">Cắt CNC Gỗ Công Nghiệp</h3>
         </a>
       </div>
     </div>
   </section>
 
   <!-- =====================================================================
-       5. [UX BUILDER SECTION] DANH MỤC 1: THI CÔNG QUẢNG CÁO TẠI ĐÀ NẴNG
-       (Sản phẩm chia 2 cột trên điện thoại, 4 cột trên máy tính, có % giảm giá góc trên trái chuẩn Flatsome)
+       5. DANH MỤC 1: THI CÔNG QUẢNG CÁO (2 CỘT MOBILE, 4 CỘT PC, CÓ % GIẢM GIÁ)
        ===================================================================== -->
-  <section id="cat-thi-cong-quang-cao" class="py-5">
+  <section id="cat-thi-cong-quang-cao" class="py-2">
     <div class="fs-container">
       <div class="fs-section-title">
         <h2 class="fs-section-title-main">
@@ -595,9 +559,7 @@
         </a>
       </div>
 
-      <!-- Điện thoại 2 cột (grid-cols-2), Máy tính 4 cột (lg:grid-cols-4) -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-        <!-- SP 1 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-18%</span>
@@ -606,9 +568,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Thi công quảng cáo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Thi Công Bảng Hiệu Mặt Dựng Alu Chữ Nổi Trọn Gói
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Thi Công Bảng Hiệu Mặt Dựng Alu Chữ Nổi Trọn Gói</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -622,7 +582,6 @@
           </div>
         </div>
 
-        <!-- SP 2 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-20%</span>
@@ -631,9 +590,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Thi công quảng cáo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Thi Công Biển Quảng Cáo Hộp Đèn LED Siêu Sáng Đà Nẵng
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Thi Công Biển Quảng Cáo Hộp Đèn LED Siêu Sáng Đà Nẵng</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -647,7 +604,6 @@
           </div>
         </div>
 
-        <!-- SP 3 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-15%</span>
@@ -656,9 +612,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Thi công quảng cáo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Thi Công Biển Pano Quảng Cáo Khung Sắt Bạt Hiflex Dày
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Thi Công Biển Pano Quảng Cáo Khung Sắt Bạt Hiflex Dày</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -672,7 +626,6 @@
           </div>
         </div>
 
-        <!-- SP 4 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-22%</span>
@@ -681,9 +634,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Thi công quảng cáo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Làm Bảng Tên Công Ty Inox Ăn Mòn – Bảng Phòng Ban Mica
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Làm Bảng Tên Công Ty Inox Ăn Mòn – Bảng Phòng Ban Mica</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -701,9 +652,9 @@
   </section>
 
   <!-- =====================================================================
-       6. [UX BUILDER SECTION] DANH MỤC 2: CHỮ NỔI QUẢNG CÁO & GIA CÔNG CNC - LASER
+       6. DANH MỤC 2: CHỮ NỔI QUẢNG CÁO & CNC - LASER
        ===================================================================== -->
-  <section id="cat-chu-noi" class="py-5">
+  <section id="cat-chu-noi" class="py-2">
     <div class="fs-container">
       <div id="cat-cnc-laser" class="fs-section-title">
         <h2 class="fs-section-title-main">
@@ -715,9 +666,7 @@
         </a>
       </div>
 
-      <!-- Điện thoại 2 cột (grid-cols-2), Máy tính 4 cột (lg:grid-cols-4) -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-        <!-- SP 5 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-19%</span>
@@ -726,9 +675,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Chữ nổi quảng cáo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Gia Công Bộ Chữ Nổi Inox Vàng Gương / Xước Hắt Sáng Chân LED
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Gia Công Bộ Chữ Nổi Inox Vàng Gương / Xước Hắt Sáng Chân LED</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -742,7 +689,6 @@
           </div>
         </div>
 
-        <!-- SP 6 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-17%</span>
@@ -751,9 +697,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Chữ nổi quảng cáo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Thi Công Chữ Nổi Mica Đài Loan Gắn Đèn LED Âm Bản Siêu Bền
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Thi Công Chữ Nổi Mica Đài Loan Gắn Đèn LED Âm Bản Siêu Bền</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -767,7 +711,6 @@
           </div>
         </div>
 
-        <!-- SP 7 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-25%</span>
@@ -776,9 +719,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">CNC – Cắt Laser</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Cắt Khắc CNC – Laser Trên Mica, Alu, Inox Lấy Nhanh Tại Xưởng
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Cắt Khắc CNC – Laser Trên Mica, Alu, Inox Lấy Nhanh Tại Xưởng</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -792,18 +733,15 @@
           </div>
         </div>
 
-        <!-- SP 8 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-16%</span>
-            <img src="https://lh3.googleusercontent.com/d/1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh=w700" onerror="retryDriveImage(this, '1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh')" alt="Logo Backdrop Quầy lễ tân văn phòng">
+            <img src="https://lh3.googleusercontent.com/d/1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh=w700" onerror="retryDriveImage(this, '1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh')" alt="Logo Backdrop Quầy lễ tân">
           </div>
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Chữ nổi & Logo</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Thi Công Bộ Logo & Chữ Nổi Backdrop Sảnh Lễ Tân Công Ty
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Thi Công Bộ Logo & Chữ Nổi Backdrop Sảnh Lễ Tân Công Ty</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -821,9 +759,9 @@
   </section>
 
   <!-- =====================================================================
-       7. [UX BUILDER SECTION] DANH MỤC 3: IN PHUN KHỔ LỚN - SHOWROOM NỘI THẤT - CNC GỖ
+       7. DANH MỤC 3: IN PHUN KHỔ LỚN - SHOWROOM NỘI THẤT - CNC GỖ
        ===================================================================== -->
-  <section id="cat-in-phun" class="py-5">
+  <section id="cat-in-phun" class="py-2">
     <div class="fs-container">
       <div id="cat-showroom" class="fs-section-title">
         <h2 id="cat-cnc-go" class="fs-section-title-main">
@@ -835,20 +773,16 @@
         </a>
       </div>
 
-      <!-- Điện thoại 2 cột (grid-cols-2), Máy tính 4 cột (lg:grid-cols-4) -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-        <!-- SP 9 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-23%</span>
-            <img src="https://lh3.googleusercontent.com/d/1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq=w700" onerror="retryDriveImage(this, '1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq')" alt="In bạt Hiflex khổ lớn Đà Nẵng">
+            <img src="https://lh3.googleusercontent.com/d/1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq=w700" onerror="retryDriveImage(this, '1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq')" alt="In bạt Hiflex khổ lớn">
           </div>
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">In phun khổ lớn</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                In Phun Bạt Hiflex Khổ Lớn, In Decal, PP, Băng Rôn Sự Kiện
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">In Phun Bạt Hiflex Khổ Lớn, In Decal, PP, Băng Rôn Sự Kiện</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -862,18 +796,15 @@
           </div>
         </div>
 
-        <!-- SP 10 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-15%</span>
-            <img src="https://lh3.googleusercontent.com/d/1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis=w700" onerror="retryDriveImage(this, '1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis')" alt="Thi công nội thất Showroom cửa hàng">
+            <img src="https://lh3.googleusercontent.com/d/1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis=w700" onerror="retryDriveImage(this, '1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis')" alt="Thi công nội thất Showroom">
           </div>
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Showroom Nội Ngoại Thất</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Thiết Kế & Thi Công Trọn Gói Nội Ngoại Thất Showroom, Shop
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Thiết Kế & Thi Công Trọn Gói Nội Ngoại Thất Showroom, Shop</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -887,7 +818,6 @@
           </div>
         </div>
 
-        <!-- SP 11 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-20%</span>
@@ -896,9 +826,7 @@
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Showroom Nội Ngoại Thất</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Gia Công Quầy Thu Ngân, Tủ Kệ Trưng Bày Mỹ Phẩm – Điện Thoại
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Gia Công Quầy Thu Ngân, Tủ Kệ Trưng Bày Mỹ Phẩm – Điện Thoại</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -912,18 +840,15 @@
           </div>
         </div>
 
-        <!-- SP 12 -->
         <div class="fs-product-box product-card">
           <div class="fs-aspect-product">
             <span class="fs-badge-sale">-18%</span>
-            <img src="https://lh3.googleusercontent.com/d/1-zGZltnPKZavW1-8jScASbS82-teBSnw=w700" onerror="retryDriveImage(this, '1-zGZltnPKZavW1-8jScASbS82-teBSnw')" alt="Cắt CNC gỗ công nghiệp Đà Nẵng">
+            <img src="https://lh3.googleusercontent.com/d/1-zGZltnPKZavW1-8jScASbS82-teBSnw=w700" onerror="retryDriveImage(this, '1-zGZltnPKZavW1-8jScASbS82-teBSnw')" alt="Cắt CNC gỗ công nghiệp">
           </div>
           <div class="p-2.5 sm:p-3.5 flex flex-col flex-1 justify-between">
             <div>
               <div class="text-[11px] text-gray-400 uppercase">Cắt CNC Gỗ Công Nghiệp</div>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">
-                Cắt CNC Gỗ Công Nghiệp MDF, Vách Ngăn Hoa Văn Trang Trí Đà Nẵng
-              </h3>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-0.5 hover:text-primary">Cắt CNC Gỗ Công Nghiệp MDF, Vách Ngăn Hoa Văn Trang Trí Đà Nẵng</h3>
             </div>
             <div class="mt-2 pt-2 border-t border-gray-100">
               <div class="flex flex-wrap items-baseline gap-1.5">
@@ -941,140 +866,77 @@
   </section>
 
   <!-- =====================================================================
-       8. [UX BUILDER SECTION] DỰ ÁN & HÌNH ẢNH THI CÔNG THỰC TẾ (15 ẢNH GOOGLE DRIVE)
-       (Cam kết sử dụng đúng 15 file ảnh thực tế do bạn cung cấp, bấm vào phóng to xem rõ nét)
+       8. 15 HÌNH ẢNH THI CÔNG THỰC TẾ (GOOGLE DRIVE)
        ===================================================================== -->
-  <section id="du-an-thuc-te" class="py-6 bg-white border-y border-gray-200">
+  <section id="du-an-thuc-te" class="py-4 bg-white border-y border-gray-200">
     <div class="fs-container">
       <div class="fs-section-title">
         <h2 class="fs-section-title-main">
           <i class="fa-solid fa-camera-retro"></i>
           <span>DỰ ÁN & HÌNH ẢNH THI CÔNG THỰC TẾ TÂN ĐẠI VIỆT</span>
         </h2>
-        <span class="hidden md:inline-block text-xs text-gray-500">
-          100% Hình ảnh công trình thực tế của Công ty Quảng Cáo Tân Đại Việt
-        </span>
+        <span class="hidden md:inline-block text-xs text-gray-500">100% Ảnh công trình thực tế của Tân Đại Việt</span>
       </div>
 
-      <!-- Điện thoại 2 cột, Máy tính 5 cột để hiển thị trọn vẹn 15 bức ảnh thực tế -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <!-- Ảnh 1 -->
-        <div onclick="openLightbox('1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY', 'Công trình thi công bảng hiệu thực tế #01')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w600" onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')" alt="Công trình Tân Đại Việt 01" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY', 'Công trình #01')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w600" onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')" alt="Công trình 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Thi công bảng hiệu #01</div>
         </div>
-
-        <!-- Ảnh 2 -->
-        <div onclick="openLightbox('1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg', 'Công trình thi công bảng hiệu thực tế #02')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg=w600" onerror="retryDriveImage(this, '1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg')" alt="Công trình Tân Đại Việt 02" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg', 'Công trình #02')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg=w600" onerror="retryDriveImage(this, '1H0Gh7sJbSuLnCQqUMuy_hYqh9knwWzTg')" alt="Công trình 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Thi công mặt dựng Alu #02</div>
         </div>
-
-        <!-- Ảnh 3 -->
-        <div onclick="openLightbox('1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR', 'Công trình thi công bảng hiệu thực tế #03')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR=w600" onerror="retryDriveImage(this, '1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR')" alt="Công trình Tân Đại Việt 03" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR', 'Công trình #03')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR=w600" onerror="retryDriveImage(this, '1t6KlZoRaR5zdwSYOmhY9kzrsZkfBUNuR')" alt="Công trình 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Biển quảng cáo cửa hàng #03</div>
         </div>
-
-        <!-- Ảnh 4 -->
-        <div onclick="openLightbox('1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb', 'Công trình thi công chữ nổi đèn LED #04')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb=w600" onerror="retryDriveImage(this, '1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb')" alt="Công trình Tân Đại Việt 04" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
-          <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Chữ nổi Mica đèn LED #04</div>
+        <div onclick="openLightbox('1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb', 'Công trình #04')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb=w600" onerror="retryDriveImage(this, '1SNhvg8Cp9Nb8TFPxnw-M7aoPdr97qOgb')" alt="Công trình 4" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
+          <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Chữ nổi Mica LED #04</div>
         </div>
-
-        <!-- Ảnh 5 -->
-        <div onclick="openLightbox('1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm', 'Gia công chữ nổi Inox tại xưởng #05')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm=w600" onerror="retryDriveImage(this, '1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm')" alt="Công trình Tân Đại Việt 05" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
-          <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Gia công chữ nổi Inox #05</div>
+        <div onclick="openLightbox('1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm', 'Công trình #05')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm=w600" onerror="retryDriveImage(this, '1Byk40D7yDREmk-7ggDNrVWrLIP7O_ckm')" alt="Công trình 5" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
+          <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Gia công chữ Inox #05</div>
         </div>
-
-        <!-- Ảnh 6 -->
-        <div onclick="openLightbox('1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R', 'Thi công bảng hiệu hộp đèn #06')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R=w600" onerror="retryDriveImage(this, '1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R')" alt="Công trình Tân Đại Việt 06" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R', 'Công trình #06')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R=w600" onerror="retryDriveImage(this, '1OO7tZftFrzm1yhRZq96muys0p4o-Rt4R')" alt="Công trình 6" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Bảng hiệu hộp đèn #06</div>
         </div>
-
-        <!-- Ảnh 7 -->
-        <div onclick="openLightbox('1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_', 'Thi công showroom & nội thất quảng cáo #07')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_=w600" onerror="retryDriveImage(this, '1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_')" alt="Công trình Tân Đại Việt 07" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_', 'Công trình #07')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_=w600" onerror="retryDriveImage(this, '1uO1DEDXrYbxR8pvav1t58WYrcn-NAR-_')" alt="Công trình 7" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Nội thất Showroom #07</div>
         </div>
-
-        <!-- Ảnh 8 -->
-        <div onclick="openLightbox('1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh', 'Lắp đặt bộ chữ nổi mặt tiền #08')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh=w600" onerror="retryDriveImage(this, '1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh')" alt="Công trình Tân Đại Việt 08" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh', 'Công trình #08')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh=w600" onerror="retryDriveImage(this, '1X_eKfMy8doHLLFJGf2lwDj1h2e5DdVbh')" alt="Công trình 8" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Lắp đặt chữ nổi #08</div>
         </div>
-
-        <!-- Ảnh 9 -->
-        <div onclick="openLightbox('1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq', 'In phun khổ lớn & thi công Pano #09')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq=w600" onerror="retryDriveImage(this, '1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq')" alt="Công trình Tân Đại Việt 09" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq', 'Công trình #09')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq=w600" onerror="retryDriveImage(this, '1hs87c-CqhaG6s3C936HzlbvCygPwi4Yq')" alt="Công trình 9" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Thi công Pano bạt #09</div>
         </div>
-
-        <!-- Ảnh 10 -->
-        <div onclick="openLightbox('1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis', 'Thi công trang trí cửa hàng trọn gói #10')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis=w600" onerror="retryDriveImage(this, '1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis')" alt="Công trình Tân Đại Việt 10" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis', 'Công trình #10')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis=w600" onerror="retryDriveImage(this, '1dQeOMFFjRMYAiM7G7bMPZE2ONo2Gxxis')" alt="Công trình 10" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Bảng hiệu trọn gói #10</div>
         </div>
-
-        <!-- Ảnh 11 -->
-        <div onclick="openLightbox('1gwiOSNl-R5xZW5gSBsXnYdR4Su-4FI9c', 'Hoàn thiện bảng quảng cáo thương hiệu #11')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1gwiOSNl-R5xZW5gSBsXnYdR4Su-4FI9c=w600" onerror="retryDriveImage(this, '1gwiOSNl-R5xZW5gSBsXnYdR4Su-4FI9c')" alt="Công trình Tân Đại Việt 11" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1gwiOSNl-R5xZW5gSBsXnYdR4Su-4FI9c', 'Công trình #11')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1gwiOSNl-R5xZW5gSBsXnYdR4Su-4FI9c=w600" onerror="retryDriveImage(this, '1gwiOSNl-R5xZW5gSBsXnYdR4Su-4FI9c')" alt="Công trình 11" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Bảng hiệu thương hiệu #11</div>
         </div>
-
-        <!-- Ảnh 12 -->
-        <div onclick="openLightbox('1-zGZltnPKZavW1-8jScASbS82-teBSnw', 'Gia công cắt khắc CNC tại xưởng Lê Đình Lý #12')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1-zGZltnPKZavW1-8jScASbS82-teBSnw=w600" onerror="retryDriveImage(this, '1-zGZltnPKZavW1-8jScASbS82-teBSnw')" alt="Công trình Tân Đại Việt 12" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1-zGZltnPKZavW1-8jScASbS82-teBSnw', 'Công trình #12')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1-zGZltnPKZavW1-8jScASbS82-teBSnw=w600" onerror="retryDriveImage(this, '1-zGZltnPKZavW1-8jScASbS82-teBSnw')" alt="Công trình 12" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Xưởng gia công CNC #12</div>
         </div>
-
-        <!-- Ảnh 13 -->
-        <div onclick="openLightbox('1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20', 'Thi công bảng hiệu đèn LED ban đêm #13')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20=w600" onerror="retryDriveImage(this, '1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20')" alt="Công trình Tân Đại Việt 13" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20', 'Công trình #13')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20=w600" onerror="retryDriveImage(this, '1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20')" alt="Công trình 13" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Bảng hiệu LED nổi bật #13</div>
         </div>
-
-        <!-- Ảnh 14 -->
-        <div onclick="openLightbox('15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG', 'Lắp đặt bảng hiệu công ty tại Đà Nẵng #14')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG=w600" onerror="retryDriveImage(this, '15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG')" alt="Công trình Tân Đại Việt 14" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG', 'Công trình #14')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG=w600" onerror="retryDriveImage(this, '15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG')" alt="Công trình 14" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Lắp đặt hoàn thiện #14</div>
         </div>
-
-        <!-- Ảnh 15 -->
-        <div onclick="openLightbox('1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K', 'Thi công bảng quảng cáo chuyên nghiệp #15')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/d/1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K=w600" onerror="retryDriveImage(this, '1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K')" alt="Công trình Tân Đại Việt 15" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
+        <div onclick="openLightbox('1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K', 'Công trình #15')" class="group cursor-pointer rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+          <div class="aspect-[4/3] overflow-hidden"><img src="https://lh3.googleusercontent.com/d/1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K=w600" onerror="retryDriveImage(this, '1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K')" alt="Công trình 15" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>
           <div class="p-2 text-center text-xs font-medium text-gray-700 truncate">Công trình tiêu biểu #15</div>
         </div>
       </div>
@@ -1082,13 +944,12 @@
   </section>
 
   <!-- =====================================================================
-       9. [UX BUILDER SECTION] FORM YÊU CẦU TƯ VẤN & BÁO GIÁ TRANG CHỦ
+       9. FORM YÊU CẦU & BÁO GIÁ TRANG CHỦ
        ===================================================================== -->
-  <section id="form-bao-gia" class="py-7">
+  <section id="form-bao-gia" class="py-5">
     <div class="fs-container">
       <div class="bg-primary rounded-xl shadow-lg overflow-hidden border border-blue-800">
         <div class="grid grid-cols-1 lg:grid-cols-12">
-          <!-- Cột thông tin cam kết -->
           <div class="lg:col-span-5 p-5 sm:p-7 text-white flex flex-col justify-between bg-primaryDark/60">
             <div class="space-y-3">
               <div class="inline-block bg-yellow-400 text-slate-900 font-bold text-xs px-3 py-1 rounded uppercase">
@@ -1102,19 +963,17 @@
               </p>
               <ul class="space-y-2 text-xs sm:text-sm pt-2">
                 <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-yellow-400"></i>Miễn phí 100% chi phí khảo sát & thiết kế khi thi công</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-yellow-400"></i>Sản xuất trực tiếp tại xưởng K88/9B Lê Đình Lý, không qua trung gian</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-yellow-400"></i>Bảo hành dài hạn từ 12 – 24 tháng tận nơi tại Đà Nẵng</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-yellow-400"></i>Sản xuất trực tiếp tại xưởng K88/9B Lê Đình Lý</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-yellow-400"></i>Bảo hành dài hạn từ 12 – 24 tháng tại Đà Nẵng</li>
               </ul>
             </div>
 
             <div class="mt-6 pt-4 border-t border-white/15 text-xs sm:text-sm space-y-1">
               <div><i class="fa-solid fa-phone-volume text-yellow-400 mr-2"></i>Hotline: <strong>0987.919.069 – 0369.561.458</strong></div>
-              <div><i class="fa-solid fa-location-dot text-yellow-400 mr-2"></i>Văn phòng: 149 Hoàng Diệu, Hải Châu, Đà Nẵng</div>
-              <div><i class="fa-solid fa-industry text-yellow-400 mr-2"></i>Xưởng SX: K88/9B Lê Đình Lý, Thanh Khê, Đà Nẵng</div>
+              <div><i class="fa-solid fa-location-dot text-yellow-400 mr-2"></i>Văn phòng: 149 Hoàng Diệu, Đà Nẵng</div>
             </div>
           </div>
 
-          <!-- Cột Form nhập liệu chuẩn Contact Form 7 Flatsome -->
           <div class="lg:col-span-7 p-5 sm:p-7 bg-white">
             <form id="quoteForm" onsubmit="submitQuoteForm(event)" class="space-y-3.5">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -1124,7 +983,7 @@
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số điện thoại / Zalo *</label>
-                  <input id="qPhone" type="tel" required placeholder="Nhập SĐT (VD: 0987919069)..." class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-primary">
+                  <input id="qPhone" type="tel" required placeholder="Nhập SĐT..." class="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-primary">
                 </div>
               </div>
 
@@ -1147,8 +1006,8 @@
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Yêu cầu chi tiết (Kích thước, chất liệu mong muốn)</label>
-                <textarea id="qNote" rows="3" placeholder="Ví dụ: Cần làm bảng hiệu ngang 4m cao 1.5m nền Alu chữ nổi Mica sáng đèn..." class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-primary"></textarea>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Yêu cầu chi tiết</label>
+                <textarea id="qNote" rows="3" placeholder="Ví dụ: Làm bảng hiệu ngang 4m cao 1.5m nền Alu..." class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-primary"></textarea>
               </div>
 
               <div class="flex flex-wrap items-center gap-3 pt-1">
@@ -1162,7 +1021,6 @@
                 </a>
               </div>
 
-              <!-- Thông báo gửi thành công -->
               <div id="quoteSuccessMsg" class="hidden p-3.5 rounded-md bg-green-50 border border-green-300 text-green-800 text-xs sm:text-sm font-medium"></div>
             </form>
           </div>
@@ -1172,9 +1030,9 @@
   </section>
 
   <!-- =====================================================================
-       10. [UX BUILDER SECTION] DANH MỤC CÁC BÀI VIẾT TRANG CHỦ (TIN TỨC & KINH NGHIỆM)
+       10. DANH MỤC CÁC BÀI VIẾT TRANG CHỦ
        ===================================================================== -->
-  <section id="tin-tuc" class="py-5">
+  <section id="tin-tuc" class="py-2">
     <div class="fs-container">
       <div class="fs-section-title">
         <h2 class="fs-section-title-main">
@@ -1184,89 +1042,60 @@
         <span class="hidden sm:inline-block text-xs text-gray-500">Cập nhật báo giá & mẫu bảng hiệu đẹp</span>
       </div>
 
-      <!-- Grid bài viết: Điện thoại 2 cột, Máy tính 4 cột -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-        <!-- Bài viết 1 -->
         <article class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col">
           <div class="aspect-[16/10] overflow-hidden bg-gray-100">
-            <img src="https://lh3.googleusercontent.com/d/1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20=w600" onerror="retryDriveImage(this, '1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20')" alt="Báo giá làm bảng hiệu quảng cáo tại Đà Nẵng" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+            <img src="https://lh3.googleusercontent.com/d/1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20=w600" onerror="retryDriveImage(this, '1YyvHYHvPJCcfvYQ7V1jdg3naCC9a4K20')" alt="Bài viết 1" class="w-full h-full object-cover hover:scale-105 transition duration-300">
           </div>
           <div class="p-3 flex flex-col flex-1 justify-between">
             <div>
               <span class="text-[11px] font-bold text-primary uppercase">Báo giá thi công</span>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">
-                Bảng Báo Giá Làm Bảng Hiệu Quảng Cáo Tại Đà Nẵng Mới Nhất
-              </h3>
-              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">
-                Tổng hợp chi tiết đơn giá thi công mặt dựng Alu, chữ nổi Mica, Inox, hộp đèn LED và bạt Hiflex tại xưởng Tân Đại Việt.
-              </p>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">Bảng Báo Giá Làm Bảng Hiệu Quảng Cáo Tại Đà Nẵng Mới Nhất</h3>
+              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">Tổng hợp chi tiết đơn giá thi công mặt dựng Alu, chữ nổi Mica, Inox tại xưởng Tân Đại Việt.</p>
             </div>
-            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">
-              Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </a>
+            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
           </div>
         </article>
 
-        <!-- Bài viết 2 -->
         <article class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col">
           <div class="aspect-[16/10] overflow-hidden bg-gray-100">
-            <img src="https://lh3.googleusercontent.com/d/15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG=w600" onerror="retryDriveImage(this, '15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG')" alt="Mẫu chữ nổi Inox vàng gương đẹp" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+            <img src="https://lh3.googleusercontent.com/d/15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG=w600" onerror="retryDriveImage(this, '15inPwv3lEvSa35WuD9nOm8iRjz_2qvbG')" alt="Bài viết 2" class="w-full h-full object-cover hover:scale-105 transition duration-300">
           </div>
           <div class="p-3 flex flex-col flex-1 justify-between">
             <div>
               <span class="text-[11px] font-bold text-primary uppercase">Tư vấn chất liệu</span>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">
-                Kinh Nghiệm Chọn Chữ Nổi Inox Hay Chữ Nổi Mica Cho Mặt Tiền Shop
-              </h3>
-              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">
-                So sánh độ bền, tính thẩm mỹ và hiệu ứng ánh sáng ban đêm giữa chữ nổi Inox 304 và chữ nổi Mica đèn LED.
-              </p>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">Kinh Nghiệm Chọn Chữ Nổi Inox Hay Chữ Nổi Mica Cho Mặt Tiền Shop</h3>
+              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">So sánh độ bền và tính thẩm mỹ giữa chữ nổi Inox 304 và chữ nổi Mica đèn LED.</p>
             </div>
-            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">
-              Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </a>
+            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
           </div>
         </article>
 
-        <!-- Bài viết 3 -->
         <article class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col">
           <div class="aspect-[16/10] overflow-hidden bg-gray-100">
-            <img src="https://lh3.googleusercontent.com/d/1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K=w600" onerror="retryDriveImage(this, '1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K')" alt="Gia công cắt CNC Laser tại Đà Nẵng" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+            <img src="https://lh3.googleusercontent.com/d/1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K=w600" onerror="retryDriveImage(this, '1Dbaf0XDGWpAbOwaLQlf63aqJH-4iaT6K')" alt="Bài viết 3" class="w-full h-full object-cover hover:scale-105 transition duration-300">
           </div>
           <div class="p-3 flex flex-col flex-1 justify-between">
             <div>
-              <span class="text-[11px] font-bold text-primary uppercase">Công nghệ CNC - Laser</span>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">
-                Xưởng Cắt Khắc CNC – Laser Trên Gỗ, Mica, Alu Chính Xác Tại Đà Nẵng
-              </h3>
-              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">
-                Hệ thống máy cắt CNC và Laser hiện đại tại K88/9B Lê Đình Lý đáp ứng mọi đơn hàng gia công quảng cáo lấy ngay.
-              </p>
+              <span class="text-[11px] font-bold text-primary uppercase">CNC - Laser</span>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">Xưởng Cắt Khắc CNC – Laser Trên Gỗ, Mica, Alu Chính Xác Tại Đà Nẵng</h3>
+              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">Hệ thống máy cắt CNC và Laser hiện đại tại K88/9B Lê Đình Lý.</p>
             </div>
-            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">
-              Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </a>
+            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
           </div>
         </article>
 
-        <!-- Bài viết 4 -->
         <article class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col">
           <div class="aspect-[16/10] overflow-hidden bg-gray-100">
-            <img src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w600" onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')" alt="Quy trình thiết kế thi công bảng hiệu" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+            <img src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w600" onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')" alt="Bài viết 4" class="w-full h-full object-cover hover:scale-105 transition duration-300">
           </div>
           <div class="p-3 flex flex-col flex-1 justify-between">
             <div>
               <span class="text-[11px] font-bold text-primary uppercase">Quy trình làm việc</span>
-              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">
-                Quy Trình 4 Bước Khảo Sát, Thiết Kế Và Thi Công Quảng Cáo Tân Đại Việt
-              </h3>
-              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">
-                Từ khâu tiếp nhận yêu cầu, dựng phối cảnh 3D đến gia công tại xưởng và nghiệm thu bảo hành tận tâm.
-              </p>
+              <h3 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2 mt-1 hover:text-primary">Quy Trình 4 Bước Khảo Sát, Thiết Kế Và Thi Công Quảng Cáo Tân Đại Việt</h3>
+              <p class="text-xs text-gray-500 line-clamp-2 mt-1.5">Từ khâu tiếp nhận yêu cầu, dựng phối cảnh 3D đến gia công và nghiệm thu bảo hành.</p>
             </div>
-            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">
-              Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </a>
+            <a href="#form-bao-gia" class="text-xs font-bold text-accent mt-2.5 inline-flex items-center gap-1">Xem chi tiết <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
           </div>
         </article>
       </div>
@@ -1274,10 +1103,9 @@
   </section>
 
   <!-- =====================================================================
-       11. [UX BUILDER SECTION] BẢN ĐỒ GOOGLE MAPS & FANPAGE FACEBOOK NGOÀI TRANG CHỦ
-       (Đưa trực tiếp Google Map + Fanpage https://www.facebook.com/qctandaiviet/ ra ngoài trang chủ)
+       11. BẢN ĐỒ GOOGLE MAPS & FANPAGE FACEBOOK TRANG CHỦ
        ===================================================================== -->
-  <section id="lien-he-map" class="py-6">
+  <section id="lien-he-map" class="py-4">
     <div class="fs-container">
       <div class="fs-section-title">
         <h2 class="fs-section-title-main">
@@ -1287,7 +1115,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <!-- Cột Trái (7/12): Bản Đồ Google Maps trực tiếp ngoài trang chủ -->
         <div class="lg:col-span-7 bg-white rounded-lg border border-gray-200 p-3 sm:p-4 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -1295,70 +1122,57 @@
                 <h3 class="font-bold text-sm sm:text-base text-primary uppercase">
                   <i class="fa-solid fa-location-dot text-accent mr-1.5"></i>Vị Trí Google Maps Tân Đại Việt
                 </h3>
-                <p class="text-xs text-gray-600 mt-0.5">
-                  VP: 149 Hoàng Diệu, Đà Nẵng | Xưởng SX: K88/9B Lê Đình Lý, Đà Nẵng
-                </p>
+                <p class="text-xs text-gray-600 mt-0.5">VP: 149 Hoàng Diệu, Đà Nẵng | Xưởng: K88/9B Lê Đình Lý, Đà Nẵng</p>
               </div>
               <a href="https://maps.app.goo.gl/2HGiecoLaT5Zsfk76" target="_blank" rel="noopener" class="bg-primary hover:bg-primaryDark text-white text-xs font-bold px-3.5 py-2 rounded inline-flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-diamond-turn-right"></i>
-                <span>Mở Google Maps Chỉ Đường</span>
+                <span>Mở Google Maps</span>
               </a>
             </div>
-
-            <!-- Khung bản đồ Google Map nhúng trực tiếp -->
             <div class="w-full h-72 sm:h-80 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
               <iframe
-                title="Bản đồ Công ty Quảng Cáo Tân Đại Việt 149 Hoàng Diệu Đà Nẵng"
+                title="Bản đồ Tân Đại Việt"
                 src="https://maps.google.com/maps?q=149%20Ho%C3%A0ng%20Di%E1%BB%87u,%20%C4%90%C3%A0%20N%E1%BA%B5ng&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 class="w-full h-full border-0"
                 loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
           </div>
-
           <div class="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-600">
-            <span><i class="fa-solid fa-map-pin text-accent mr-1"></i>Link Map chính thức: <a href="https://maps.app.goo.gl/2HGiecoLaT5Zsfk76" target="_blank" rel="noopener" class="text-primary font-bold underline">maps.app.goo.gl/2HGiecoLaT5Zsfk76</a></span>
+            <span><i class="fa-solid fa-map-pin text-accent mr-1"></i>Map: <a href="https://maps.app.goo.gl/2HGiecoLaT5Zsfk76" target="_blank" rel="noopener" class="text-primary font-bold underline">maps.app.goo.gl/2HGiecoLaT5Zsfk76</a></span>
             <span class="font-bold text-gray-800">Hotline: 0987.919.069 – 0369.561.458</span>
           </div>
         </div>
 
-        <!-- Cột Phải (5/12): Fanpage Facebook chính thức ngoài trang chủ -->
         <div class="lg:col-span-5 bg-white rounded-lg border border-gray-200 p-3 sm:p-4 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between gap-2 mb-3">
               <div>
                 <h3 class="font-bold text-sm sm:text-base text-[#1877F2] uppercase">
-                  <i class="fa-brands fa-facebook mr-1.5"></i>Fanpage Quảng Cáo Tân Đại Việt
+                  <i class="fa-brands fa-facebook mr-1.5"></i>Fanpage Tân Đại Việt
                 </h3>
                 <p class="text-xs text-gray-600 mt-0.5">facebook.com/qctandaiviet</p>
               </div>
               <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" class="bg-[#1877F2] hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded inline-flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-thumbs-up"></i>
-                <span>Theo Dõi Trang</span>
+                <span>Theo Dõi</span>
               </a>
             </div>
-
-            <!-- Thẻ nhận diện Fanpage + Plugin Facebook nhúng -->
             <div class="rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
               <div class="relative h-28 bg-primary overflow-hidden">
-                <img src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w800" onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')" alt="Ảnh bìa Fanpage Tân Đại Việt" class="w-full h-full object-cover opacity-75">
+                <img src="https://lh3.googleusercontent.com/d/1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY=w800" onerror="retryDriveImage(this, '1SMOThy-0k_10RMKYDuE8EGLMHeb0d3kY')" alt="Ảnh bìa" class="w-full h-full object-cover opacity-75">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                 <div class="absolute bottom-2.5 left-3 right-3 flex items-center gap-3">
-                  <img src="https://lh3.googleusercontent.com/d/1a_drCTyMM41L7uinFZuK-itHgrr0KxD2=w200" onerror="retryDriveImage(this, '1a_drCTyMM41L7uinFZuK-itHgrr0KxD2')" alt="Logo Fanpage" class="w-12 h-12 rounded-full border-2 border-white bg-white object-contain p-0.5 shrink-0">
+                  <img src="https://lh3.googleusercontent.com/d/1a_drCTyMM41L7uinFZuK-itHgrr0KxD2=w200" onerror="retryDriveImage(this, '1a_drCTyMM41L7uinFZuK-itHgrr0KxD2')" alt="Logo" class="w-12 h-12 rounded-full border-2 border-white bg-white object-contain p-0.5 shrink-0">
                   <div class="text-white min-w-0">
-                    <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" class="font-bold text-sm hover:underline block truncate">
-                      Quảng Cáo Tân Đại Việt Đà Nẵng
-                    </a>
-                    <span class="text-[11px] text-gray-200 block truncate">@qctandaiviet • Thiết kế & Thi công Quảng Cáo</span>
+                    <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" class="font-bold text-sm hover:underline block truncate">Quảng Cáo Tân Đại Việt Đà Nẵng</a>
+                    <span class="text-[11px] text-gray-200 block truncate">@qctandaiviet • Thi công Quảng Cáo</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Facebook Page Iframe chuẩn -->
               <div class="w-full flex justify-center bg-white py-2 overflow-hidden">
                 <iframe
-                  title="Fanpage Quảng Cáo Tân Đại Việt"
+                  title="Fanpage Tân Đại Việt"
                   src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fqctandaiviet%2F&tabs=timeline&width=340&height=210&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true"
                   width="340"
                   height="210"
@@ -1371,12 +1185,9 @@
               </div>
             </div>
           </div>
-
           <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-            <span class="text-gray-600">Kết nối trực tiếp qua Messenger Fanpage:</span>
-            <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" class="font-bold text-[#1877F2] hover:underline">
-              Gửi tin nhắn <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
-            </a>
+            <span class="text-gray-600">Nhắn tin qua Messenger:</span>
+            <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" class="font-bold text-[#1877F2] hover:underline">Gửi tin nhắn <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
           </div>
         </div>
       </div>
@@ -1384,71 +1195,51 @@
   </section>
 
   <!-- =====================================================================
-       12. FOOTER CHUẨN FLATSOME (Đầy đủ thông tin công ty, danh mục, chính sách)
+       12. FOOTER
        ===================================================================== -->
   <footer class="bg-slate-900 text-gray-300 pt-10 pb-20 md:pb-8 border-t-4 border-primary">
     <div class="fs-container">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7 pb-8 border-b border-slate-800">
-        <!-- Cột 1: Thông tin công ty -->
         <div class="space-y-3">
           <div class="flex items-center gap-3">
-            <img src="https://lh3.googleusercontent.com/d/1a_drCTyMM41L7uinFZuK-itHgrr0KxD2=w300" onerror="retryDriveImage(this, '1a_drCTyMM41L7uinFZuK-itHgrr0KxD2')" alt="Logo Tân Đại Việt" class="w-12 h-12 rounded bg-white p-1 object-contain shrink-0">
+            <img src="https://lh3.googleusercontent.com/d/1a_drCTyMM41L7uinFZuK-itHgrr0KxD2=w300" onerror="retryDriveImage(this, '1a_drCTyMM41L7uinFZuK-itHgrr0KxD2')" alt="Logo" class="w-12 h-12 rounded bg-white p-1 object-contain shrink-0">
             <div>
               <div class="font-black text-white text-sm uppercase">QUẢNG CÁO TÂN ĐẠI VIỆT</div>
               <div class="text-xs text-yellow-400">Website: tandaiviet.com</div>
             </div>
           </div>
           <p class="text-xs text-gray-400 leading-relaxed">
-            <strong>CÔNG TY TNHH THIẾT KẾ THI CÔNG QUẢNG CÁO TÂN ĐẠI VIỆT</strong> – Đơn vị uy tín hàng đầu tại Đà Nẵng chuyên thiết kế thi công bảng hiệu quảng cáo, chữ nổi Inox - Mica, cắt khắc CNC - Laser, in phun khổ lớn và nội ngoại thất Showroom.
+            <strong>CÔNG TY TNHH THIẾT KẾ THI CÔNG QUẢNG CÁO TÂN ĐẠI VIỆT</strong> – Đơn vị uy tín hàng đầu tại Đà Nẵng chuyên thiết kế thi công bảng hiệu quảng cáo, chữ nổi, cắt CNC Laser và nội ngoại thất Showroom.
           </p>
         </div>
 
-        <!-- Cột 2: Thông tin liên hệ -->
         <div class="space-y-2.5 text-xs">
           <h4 class="font-bold text-white text-sm uppercase border-b border-slate-700 pb-2">THÔNG TIN LIÊN HỆ</h4>
-          <p class="flex items-start gap-2">
-            <i class="fa-solid fa-location-dot text-yellow-400 mt-1"></i>
-            <span><strong>Văn phòng:</strong> 149 Hoàng Diệu, Quận Hải Châu, TP. Đà Nẵng</span>
-          </p>
-          <p class="flex items-start gap-2">
-            <i class="fa-solid fa-industry text-yellow-400 mt-1"></i>
-            <span><strong>Xưởng sản xuất:</strong> K88/9B Lê Đình Lý, Quận Thanh Khê, TP. Đà Nẵng</span>
-          </p>
-          <p class="flex items-center gap-2">
-            <i class="fa-solid fa-phone-volume text-yellow-400"></i>
-            <span><strong>Hotline:</strong> <a href="tel:0987919069" class="text-white font-bold hover:text-yellow-400">0987.919.069</a> – <a href="tel:0369561458" class="text-white font-bold hover:text-yellow-400">0369.561.458</a></span>
-          </p>
-          <p class="flex items-center gap-2">
-            <i class="fa-solid fa-globe text-yellow-400"></i>
-            <span><strong>Website:</strong> tandaiviet.com</span>
-          </p>
-          <p class="flex items-center gap-2">
-            <i class="fa-brands fa-facebook text-yellow-400"></i>
-            <span><strong>Fanpage:</strong> <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" class="hover:underline">fb.com/qctandaiviet</a></span>
-          </p>
+          <p class="flex items-start gap-2"><i class="fa-solid fa-location-dot text-yellow-400 mt-1"></i><span><strong>Văn phòng:</strong> 149 Hoàng Diệu, Hải Châu, Đà Nẵng</span></p>
+          <p class="flex items-start gap-2"><i class="fa-solid fa-industry text-yellow-400 mt-1"></i><span><strong>Xưởng SX:</strong> K88/9B Lê Đình Lý, Thanh Khê, Đà Nẵng</span></p>
+          <p class="flex items-center gap-2"><i class="fa-solid fa-phone-volume text-yellow-400"></i><span><strong>Hotline:</strong> <a href="tel:0987919069" class="text-white font-bold">0987.919.069</a> – <a href="tel:0369561458" class="text-white font-bold">0369.561.458</a></span></p>
+          <p class="flex items-center gap-2"><i class="fa-solid fa-globe text-yellow-400"></i><span><strong>Website:</strong> tandaiviet.com</span></p>
         </div>
 
-        <!-- Cột 3: Danh mục sản phẩm -->
         <div class="space-y-2 text-xs">
           <h4 class="font-bold text-white text-sm uppercase border-b border-slate-700 pb-2">DANH MỤC SẢN PHẨM</h4>
           <ul class="space-y-2">
             <li><a href="#cat-thi-cong-quang-cao" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>Thi công Quảng Cáo Đà Nẵng</a></li>
             <li><a href="#cat-chu-noi" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>Chữ Nổi Quảng Cáo Inox - Mica</a></li>
-            <li><a href="#cat-cnc-laser" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>CNC – Cắt Laser – Máy Hàn & Uốn Inox</a></li>
-            <li><a href="#cat-in-phun" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>In Phun Khổ Lớn Bạt Hiflex, Decal</a></li>
+            <li><a href="#cat-cnc-laser" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>CNC – Cắt Laser – Uốn Inox</a></li>
+            <li><a href="#cat-in-phun" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>In Phun Khổ Lớn Bạt Hiflex</a></li>
             <li><a href="#cat-showroom" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>Showroom Nội Ngoại Thất</a></li>
-            <li><a href="#cat-cnc-go" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>Cắt CNC Gỗ Công Nghiệp Đà Nẵng</a></li>
+            <li><a href="#cat-cnc-go" class="hover:text-yellow-400"><i class="fa-solid fa-angle-right mr-1.5 text-primary"></i>Cắt CNC Gỗ Công Nghiệp</a></li>
           </ul>
         </div>
 
-        <!-- Cột 4: Chính sách & Cam kết -->
         <div class="space-y-2 text-xs">
           <h4 class="font-bold text-white text-sm uppercase border-b border-slate-700 pb-2">CHÍNH SÁCH & ƯU ĐÃI</h4>
           <ul class="space-y-2">
             <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Miễn phí 100% thiết kế khi thi công trọn gói</li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Khảo sát & báo giá tận nơi nhanh chóng tại Đà Nẵng</li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Sản xuất trực tiếp tại xưởng không qua trung gian</li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Bảo hành uy tín từ 12 – 24 tháng tất cả hạng mục</li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Khảo sát & báo giá tận nơi nhanh chóng</li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Sản xuất trực tiếp không qua trung gian</li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-green-400 mt-0.5"></i>Bảo hành uy tín từ 12 – 24 tháng</li>
           </ul>
         </div>
       </div>
@@ -1461,57 +1252,29 @@
   </footer>
 
   <!-- =====================================================================
-       13. CÁC NÚT LIÊN HỆ NỔI BẬT (ZALO, FACEBOOK, HOTLINE)
-       (Hiển thị gọn đẹp, không gây tràn viền)
+       13. NÚT LIÊN HỆ NỔI BẬT (ZALO, FACEBOOK, HOTLINE)
        ===================================================================== -->
   <div class="fixed right-3 bottom-4 z-50 flex flex-col items-end gap-2.5">
-    <!-- Nút Facebook Fanpage -->
-    <a
-      href="https://www.facebook.com/qctandaiviet/"
-      target="_blank"
-      rel="noopener"
-      aria-label="Facebook Quảng Cáo Tân Đại Việt"
-      class="flex items-center gap-2 bg-[#1877F2] hover:bg-blue-700 text-white rounded-full p-2.5 sm:px-4 sm:py-2.5 shadow-lg transition"
-    >
+    <a href="https://www.facebook.com/qctandaiviet/" target="_blank" rel="noopener" aria-label="Facebook" class="flex items-center gap-2 bg-[#1877F2] hover:bg-blue-700 text-white rounded-full p-2.5 sm:px-4 sm:py-2.5 shadow-lg transition">
       <i class="fa-brands fa-facebook-f text-base sm:text-lg w-5 text-center"></i>
       <span class="hidden sm:inline text-xs font-bold">Fanpage Facebook</span>
     </a>
-
-    <!-- Nút Chat Zalo -->
-    <a
-      href="https://zalo.me/0987919069"
-      target="_blank"
-      rel="noopener"
-      aria-label="Zalo Quảng Cáo Tân Đại Việt"
-      class="flex items-center gap-2 bg-[#0068ff] hover:bg-blue-600 text-white rounded-full p-2.5 sm:px-4 sm:py-2.5 shadow-lg transition"
-    >
+    <a href="https://zalo.me/0987919069" target="_blank" rel="noopener" aria-label="Zalo" class="flex items-center gap-2 bg-[#0068ff] hover:bg-blue-600 text-white rounded-full p-2.5 sm:px-4 sm:py-2.5 shadow-lg transition">
       <span class="font-black text-xs bg-white text-[#0068ff] rounded-full w-5 h-5 flex items-center justify-center">Z</span>
       <span class="hidden sm:inline text-xs font-bold">Zalo: 0987.919.069</span>
     </a>
-
-    <!-- Nút Hotline 2: 0369.561.458 -->
-    <a
-      href="tel:0369561458"
-      aria-label="Gọi 0369.561.458"
-      class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-2.5 sm:px-4 sm:py-2.5 shadow-lg transition"
-    >
+    <a href="tel:0369561458" aria-label="Hotline 2" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-2.5 sm:px-4 sm:py-2.5 shadow-lg transition">
       <i class="fa-solid fa-phone text-sm sm:text-base w-5 text-center"></i>
       <span class="hidden sm:inline text-xs font-bold">0369.561.458</span>
     </a>
-
-    <!-- Nút Hotline chính: 0987.919.069 -->
-    <a
-      href="tel:0987919069"
-      aria-label="Gọi 0987.919.069"
-      class="pulse-btn flex items-center gap-2 bg-accent hover:bg-red-700 text-white rounded-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 shadow-xl transition"
-    >
+    <a href="tel:0987919069" aria-label="Hotline chính" class="pulse-btn flex items-center gap-2 bg-accent hover:bg-red-700 text-white rounded-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 shadow-xl transition">
       <i class="fa-solid fa-phone-volume text-sm sm:text-base"></i>
       <span class="text-xs font-black">0987.919.069</span>
     </a>
   </div>
 
   <!-- =====================================================================
-       14. MODAL PHÓNG TO XEM ẢNH CÔNG TRÌNH THỰC TẾ (LIGHTBOX)
+       14. MODAL PHÓNG TO ẢNH THỰC TẾ (LIGHTBOX)
        ===================================================================== -->
   <div id="imageLightbox" class="fixed inset-0 z-50 hidden bg-black/85 flex items-center justify-center p-4">
     <div class="relative max-w-4xl w-full bg-white rounded-lg overflow-hidden shadow-2xl">
@@ -1528,10 +1291,9 @@
   </div>
 
   <!-- =====================================================================
-       15. JAVASCRIPT ĐIỀU KHIỂN SLIDER TỰ TRƯỢT, TÌM KIẾM & FORM BÁO GIÁ
+       15. JAVASCRIPT
        ===================================================================== -->
   <script>
-    // 1. Điều khiển 2 Banner tự trượt
     let currentBannerIndex = 0;
     const bannerSlides = document.querySelectorAll('#mainBannerSlider .banner-slide');
     const bannerDots = document.querySelectorAll('#mainBannerSlider .banner-dot');
@@ -1542,11 +1304,9 @@
       currentBannerIndex = (index + bannerSlides.length) % bannerSlides.length;
       bannerSlides.forEach((slide, i) => {
         if (i === currentBannerIndex) {
-          slide.classList.remove('opacity-0', 'z-0');
-          slide.classList.add('opacity-100', 'z-10');
+          slide.classList.add('active');
         } else {
-          slide.classList.remove('opacity-100', 'z-10');
-          slide.classList.add('opacity-0', 'z-0');
+          slide.classList.remove('active');
         }
       });
       bannerDots.forEach((dot, i) => {
@@ -1575,30 +1335,20 @@
       }, 4500);
     }
 
-    // Khởi chạy tự động trượt 2 banner
     resetBannerInterval();
 
-    // 2. Bật/tắt Menu trên điện thoại
     function toggleMobileMenu() {
       const drawer = document.getElementById('mobileMenuDrawer');
-      if (drawer) {
-        drawer.classList.toggle('hidden');
-      }
+      if (drawer) drawer.classList.toggle('hidden');
     }
 
-    // 3. Chọn sản phẩm điền nhanh vào Form Báo Giá
     function selectServiceForQuote(serviceName) {
       const noteEl = document.getElementById('qNote');
       const formSection = document.getElementById('form-bao-gia');
-      if (noteEl) {
-        noteEl.value = 'Tôi cần tư vấn & báo giá hạng mục: ' + serviceName;
-      }
-      if (formSection) {
-        formSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      if (noteEl) noteEl.value = 'Tôi cần tư vấn & báo giá hạng mục: ' + serviceName;
+      if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 4. Xử lý gửi Form Báo Giá ngay trên trang chủ
     function submitQuoteForm(e) {
       e.preventDefault();
       const name = document.getElementById('qName').value.trim();
@@ -1609,11 +1359,10 @@
 
       if (msgBox) {
         msgBox.classList.remove('hidden');
-        msgBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i>Cảm ơn <strong>${name}</strong> (${phone})! Yêu cầu báo giá hạng mục <strong>${category}</strong> ${address ? 'tại ' + address : ''} đã được ghi nhận. Bộ phận kỹ thuật Tân Đại Việt (<strong>0987.919.069 – 0369.561.458</strong>) sẽ liên hệ ngay!`;
+        msgBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i>Cảm ơn <strong>${name}</strong> (${phone})! Yêu cầu báo giá hạng mục <strong>${category}</strong> ${address ? 'tại ' + address : ''} đã được ghi nhận. Kỹ thuật viên Tân Đại Việt sẽ liên hệ ngay!`;
       }
     }
 
-    // 5. Tìm kiếm nhanh dịch vụ trên trang
     function filterProductsByQuery(query) {
       const q = query.trim().toLowerCase();
       if (!q) return;
@@ -1628,24 +1377,19 @@
           card.classList.remove('ring-2', 'ring-accent');
         }
       });
-      if (firstMatch) {
-        firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      if (firstMatch) firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function handleSearch(e) {
       e.preventDefault();
-      const val = document.getElementById('desktopSearchInput').value;
-      filterProductsByQuery(val);
+      filterProductsByQuery(document.getElementById('desktopSearchInput').value);
     }
 
     function handleMobileSearch(e) {
       e.preventDefault();
-      const val = document.getElementById('mobileSearchInput').value;
-      filterProductsByQuery(val);
+      filterProductsByQuery(document.getElementById('mobileSearchInput').value);
     }
 
-    // 6. Phóng to ảnh thực tế (Lightbox)
     function openLightbox(fileId, caption) {
       const modal = document.getElementById('imageLightbox');
       const img = document.getElementById('lightboxImg');
